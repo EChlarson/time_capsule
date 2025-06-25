@@ -1,2 +1,55 @@
+# Build artifacts and temporary files
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.pyc
+*.pyo
+__pycache__/
+*.class
+*.log
+*.tmp
+*.swp
+
+# Dependency directories
+node_modules/
+vendor/
+env/
+.venv/
+venv/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Sensitive or environment-specific files
 .env
-node_modules
+*.env
+*.secret
+*.key
+*.pem
+config/secrets/
+credentials.json
+
+# Cache and build directories
+dist/
+build/
+out/
+target/
+
+# Testing and coverage
+coverage/
+*.coverage
+*.test
+test-results/
+
+# Documentation build artifacts
+_site/
+docs/_build/
