@@ -8,7 +8,7 @@ const authRoutes = require('./routes/authRoutes');
 require('./config/db'); // Connect to MongoDB
 
 //Swagger 
-const swaggerDocument = require('./docs/swagger.json');
+const swaggerDocument = require('./docs/swaggerConfig');
 const swaggerUi = require('swagger-ui-express');
 
 const app = express();
