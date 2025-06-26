@@ -10,7 +10,10 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:3000', // Change to your deployed URL when ready
+        url: 'http://localhost:3000',
+      },
+      {
+        url: 'https://time-capsule-3kgt.onrender.com/',
       },
     ],
     tags: [
