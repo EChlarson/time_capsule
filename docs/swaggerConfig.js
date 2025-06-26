@@ -6,25 +6,14 @@ const options = {
     info: {
       title: 'Time Capsule API',
       version: '1.0.0',
-      description: 'API for managing time capsules (messages to your future self) with Google OAuth authentication.',
+      description: 'API for managing time capsules with Google OAuth authentication.',
     },
     servers: [
-      {
-        url: 'http://localhost:3000',
-      },
-      {
-        url: 'https://time-capsule-3kgt.onrender.com/',
-      },
+      { url: 'http://localhost:3000' },
+      { url: 'https://time-capsule-3kgt.onrender.com' },
     ],
     tags: [
-      {
-        name: 'Auth',
-        description: 'Endpoints for Google OAuth authentication',
-      },
-      {
-        name: 'Capsules',
-        description: 'Endpoints for managing time capsules',
-      },
+      { name: 'Capsules', description: 'Endpoints for managing time capsules' },
     ],
     paths: {
       '/': {
@@ -36,61 +25,7 @@ const options = {
             200: {
               description: 'Successful response',
               content: {
-                'text/plain': {
-                  schema: {
-                    type: 'string',
-                    example: 'Time Capsule API',
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-      '/api/auth/login': {
-        get: {
-          tags: ['Auth'],
-          summary: 'Initiate Google OAuth login',
-          description: 'Redirects to Google OAuth login page.',
-          responses: {
-            302: {
-              description: 'Redirects to Google OAuth login page',
-            },
-          },
-        },
-      },
-      '/api/auth/callback': {
-        get: {
-          tags: ['Auth'],
-          summary: 'Handle Google OAuth callback',
-          description: 'Processes Google OAuth callback, redirects to /api/capsules on success or /api/auth/login on failure.',
-          responses: {
-            302: {
-              description: 'Redirects to /api/capsules (success) or /api/auth/login (failure)',
-            },
-          },
-        },
-      },
-      '/api/auth/logout': {
-        get: {
-          tags: ['Auth'],
-          summary: 'Log out user',
-          description: 'Logs out the authenticated user and redirects to /.',
-          responses: {
-            302: {
-              description: 'Redirects to root (/)',
-              content: {
-                'application/json': {
-                  schema: {
-                    type: 'object',
-                    properties: {
-                      error: {
-                        type: 'string',
-                        example: 'Logout failed',
-                      },
-                    },
-                  },
-                },
+                'text/plain': { schema: { type: 'string', example: 'Time Capsule API' } },
               },
             },
           },
@@ -106,42 +41,11 @@ const options = {
             200: {
               description: 'A list of user-created capsules',
               content: {
-                'application/json': {
-                  schema: {
-                    type: 'array',
-                    items: {
-                      $ref: '#/components/schemas/Capsule',
-                    },
-                  },
-                },
+                'application/json': { schema: { type: 'array', items: { $ref: '#/components/schemas/Capsule' } } },
               },
             },
-            401: {
-              description: 'Unauthorized if not logged in',
-              content: {
-                'application/json': {
-                  schema: {
-                    type: 'object',
-                    properties: {
-                      error: { type: 'string', example: 'Unauthorized: Please log in' },
-                    },
-                  },
-                },
-              },
-            },
-            500: {
-              description: 'Server error',
-              content: {
-                'application/json': {
-                  schema: {
-                    type: 'object',
-                    properties: {
-                      message: { type: 'string', example: 'Error Retrieving Capsules' },
-                    },
-                  },
-                },
-              },
-            },
+            401: { description: 'Unauthorized if not logged in' },
+            500: { description: 'Server error' },
           },
         },
         post: {
@@ -151,77 +55,13 @@ const options = {
           security: [{ OAuth2: ['profile', 'email'] }],
           requestBody: {
             required: true,
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/CapsuleInput',
-                },
-              },
-            },
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/CapsuleInput' } } },
           },
           responses: {
-            201: {
-              description: 'Capsule created successfully',
-              content: {
-                'application/json': {
-                  schema: {
-                    type: 'object',
-                    properties: {
-                      message: { type: 'string', example: 'Capsule created successfully' },
-                      capsule: { $ref: '#/components/schemas/Capsule' },
-                    },
-                  },
-                },
-              },
-            },
-            400: {
-              description: 'Validation errors',
-              content: {
-                'application/json': {
-                  schema: {
-                    type: 'object',
-                    properties: {
-                      errors: {
-                        type: 'array',
-                        items: {
-                          type: 'object',
-                          properties: {
-                            msg: { type: 'string', example: 'Title is required' },
-                            param: { type: 'string', example: 'title' },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            401: {
-              description: 'Unauthorized if not logged in',
-              content: {
-                'application/json': {
-                  schema: {
-                    type: 'object',
-                    properties: {
-                      error: { type: 'string', example: 'Unauthorized: Please log in' },
-                    },
-                  },
-                },
-              },
-            },
-            500: {
-              description: 'Server error',
-              content: {
-                'application/json': {
-                  schema: {
-                    type: 'object',
-                    properties: {
-                      message: { type: 'string', example: 'Error creating capsule' },
-                    },
-                  },
-                },
-              },
-            },
+            201: { description: 'Capsule created successfully' },
+            400: { description: 'Validation errors' },
+            401: { description: 'Unauthorized if not logged in' },
+            500: { description: 'Server error' },
           },
         },
       },
@@ -237,74 +77,15 @@ const options = {
               in: 'path',
               required: true,
               description: 'Capsule ID',
-              schema: {
-                type: 'string',
-              },
+              schema: { type: 'string' },
             },
           ],
           responses: {
-            200: {
-              description: 'The capsule data',
-              content: {
-                'application/json': {
-                  schema: {
-                    $ref: '#/components/schemas/Capsule',
-                  },
-                },
-              },
-            },
-            403: {
-              description: 'Capsule is still locked',
-              content: {
-                'application/json': {
-                  schema: {
-                    type: 'object',
-                    properties: {
-                      message: { type: 'string', example: 'Capsule is still locked' },
-                    },
-                  },
-                },
-              },
-            },
-            404: {
-              description: 'Capsule not found',
-              content: {
-                'application/json': {
-                  schema: {
-                    type: 'object',
-                    properties: {
-                      message: { type: 'string', example: 'Capsule not Found' },
-                    },
-                  },
-                },
-              },
-            },
-            401: {
-              description: 'Unauthorized if not logged in',
-              content: {
-                'application/json': {
-                  schema: {
-                    type: 'object',
-                    properties: {
-                      error: { type: 'string', example: 'Unauthorized: Please log in' },
-                    },
-                  },
-                },
-              },
-            },
-            500: {
-              description: 'Server error',
-              content: {
-                'application/json': {
-                  schema: {
-                    type: 'object',
-                    properties: {
-                      message: { type: 'string', example: 'Error fetching capsule' },
-                    },
-                  },
-                },
-              },
-            },
+            200: { description: 'The capsule data' },
+            403: { description: 'Capsule is still locked' },
+            404: { description: 'Capsule not found' },
+            401: { description: 'Unauthorized if not logged in' },
+            500: { description: 'Server error' },
           },
         },
       },
@@ -342,19 +123,15 @@ const options = {
           flows: {
             authorizationCode: {
               authorizationUrl: 'https://accounts.google.com/o/oauth2/auth',
-              tokenUrl: 'https://accounts.google.com/o/oauth2/token',
-              scopes: {
-                profile: 'Access user profile information',
-                email: 'Access user email address',
-              },
+              tokenUrl: 'https://oauth2.googleapis.com/token',
+              scopes: { profile: 'Access user profile', email: 'Access user email' },
             },
           },
         },
       },
     },
   },
-  apis: ['./routes/*.js', './controllers/*.js'], // Optional: parse JSDoc comments
+  apis: ['./routes/*.js', './controllers/*.js'],
 };
 
-const swaggerDocument = swaggerJSDoc(options);
-module.exports = swaggerDocument;
+module.exports = swaggerJSDoc(options);

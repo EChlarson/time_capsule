@@ -10,18 +10,17 @@ passport.use(
       callbackURL: process.env.CALLBACK_URL,
     },
     async (accessToken, refreshToken, profile, done) => {
+      console.log('GoogleStrategy callbackURL:', process.env.CALLBACK_URL); // Debug
       try {
-        // Find or create user in MongoDB
         let user = await User.findOne({ googleId: profile.id });
         if (!user) {
           user = new User({
             googleId: profile.id,
             email: profile.emails[0].value,
-            accessToken: accessToken, // Store for potential API calls
+            accessToken: accessToken,
           });
           await user.save();
         } else {
-          // Update access token
           user.accessToken = accessToken;
           await user.save();
         }
@@ -33,7 +32,6 @@ passport.use(
   )
 );
 
-// Serialize/deserialize user for session
 passport.serializeUser((user, done) => done(null, user.id));
 passport.deserializeUser(async (id, done) => {
   try {
