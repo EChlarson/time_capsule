@@ -1,11 +1,13 @@
-// server.js
-require('dotenv').config(); // Load .env first
+require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-const passport = require('./config/oauth'); // Load after dotenv
+const passport = require('./config/oauth');
 const authRoutes = require('./routes/authRoutes');
-require('./config/db'); // Connect to MongoDB
+const capsuleRoutes = require('./routes/capsuleRoutes'); // Add this
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./docs/swaggerConfig'); // Confirm file path
+require('./config/db');
 
 const app = express();
 
@@ -16,7 +18,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
-    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }, // 1 day
+    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 },
   })
 );
 
@@ -24,8 +26,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 console.log('Passport initialized');
 
-// Import and use auth routes
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/auth', authRoutes);
+app.use('/api/capsules', capsuleRoutes); // Add this
 
 app.get('/', (req, res) => res.send('Time Capsule API'));
 console.log('Server routes configured');
