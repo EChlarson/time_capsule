@@ -29,5 +29,9 @@ app.use('/api/auth', authRoutes);
 app.get('/', (req, res) => res.send('Time Capsule API'));
 console.log('Server routes configured');
 
+//Swagger 
+const swaggerDocs = require('./docs/swagger');
+swaggerDocs(app);
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
