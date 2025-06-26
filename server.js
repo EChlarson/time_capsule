@@ -24,6 +24,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 console.log('Passport initialized');
 
+// Import and use auth routes
 app.use('/api/auth', authRoutes);
 
 app.get('/', (req, res) => res.send('Time Capsule API'));
