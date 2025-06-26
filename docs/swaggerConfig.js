@@ -11,11 +11,9 @@ const options = {
     servers: [
       {
         url: 'http://localhost:3000',
-        description: 'Local development server',
       },
       {
-        url: 'https://your-app-name.onrender.com',
-        description: 'Render production server',
+        url: 'https://time-capsule-3kgt.onrender.com/',
       },
     ],
     tags: [
