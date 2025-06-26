@@ -7,6 +7,10 @@ const passport = require('./config/oauth'); // Load after dotenv
 const authRoutes = require('./routes/authRoutes');
 require('./config/db'); // Connect to MongoDB
 
+//Swagger 
+const swaggerDocument = require('./docs/swagger.json');
+const swaggerUi = require('swagger-ui-express');
+
 const app = express();
 
 app.use(express.json());
@@ -24,14 +28,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 console.log('Passport initialized');
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/auth', authRoutes);
 
 app.get('/', (req, res) => res.send('Time Capsule API'));
 console.log('Server routes configured');
-
-//Swagger 
-const swaggerDocs = require('./docs/swagger');
-swaggerDocs(app);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
