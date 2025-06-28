@@ -65,7 +65,17 @@ console.log('Passport initialized');
 app.use('/api/auth', authRoutes);
 app.use('/api/capsules', capsuleRoutes);
 
-app.get('/', (req, res) => res.send('Time Capsule API'));
+// Root route
+app.get('/', (req, res) => {
+  res.send(`
+    <h1>Welcome to the Time Capsule API</h1>
+    <p>Explore the API documentation and test endpoints:</p>
+    <a href="/api-docs">Go to API Documentation</a>
+    <br>
+    <a href="api/auth/login">Login with Google</a>
+  `);
+});
+
 console.log('Server routes configured');
 
 const PORT = process.env.PORT || 3000;
