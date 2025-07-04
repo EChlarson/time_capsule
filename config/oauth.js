@@ -10,14 +10,13 @@ passport.use(
       callbackURL: process.env.CALLBACK_URL,
     },
     async (accessToken, refreshToken, profile, done) => {
-      console.log('GoogleStrategy callbackURL:', process.env.CALLBACK_URL); // Debug
       try {
         let user = await User.findOne({ googleId: profile.id });
         if (!user) {
           user = new User({
             googleId: profile.id,
             email: profile.emails[0].value,
-            accessToken: accessToken,
+            accessToken,
           });
           await user.save();
         } else {
