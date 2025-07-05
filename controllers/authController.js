@@ -6,12 +6,15 @@ exports.login = passport.authenticate('google', {
 
 exports.callback = passport.authenticate('google', {
   failureRedirect: '/api/auth/login',
-  successRedirect: '/api/capsules', // Redirect to capsules after login
+  successRedirect: '/api/capsules',
 });
 
-exports.logout = (req, res) => {
+exports.logout = (req, res, next) => {
   req.logout((err) => {
-    if (err) return res.status(500).json({ error: 'Logout failed' });
+    if (err) {
+      next(err); // Pass error to error handler
+      return;
+    }
     res.redirect('/');
   });
 };
