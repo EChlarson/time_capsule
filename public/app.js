@@ -105,36 +105,45 @@ function closePopup() {
 
 // Form handler
 function setupForm() {
-   const form = document.getElementById('messageForm');
-   if (!form) return;
+  const form = document.getElementById('messageForm');
+  if (!form) return;
 
-   form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const formData = new FormData(form);
-      const payload = {
-         title: formData.get('title'),
-         message: formData.get('message'),
-         revealDate: formData.get('revealDate'),
-         imageUrl: '', // You can implement image uploading to add real URLs
-      };
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-      try {
-         const res = await fetch(apiUrl, {
-         method: 'POST',
-         headers: {
-            'Content-Type': 'application/json',
-         },
-         credentials: 'include',
-         body: JSON.stringify(payload),
-         });
-         if (res.ok) {
-         form.reset();
-         fetchMessages();
-         } else {
-         alert('Error submitting message');
-         }
-      } catch (err) {
-         console.error('Submission failed:', err);
+    const formData = new FormData(form);
+    const payload = {
+      title: formData.get('title'),
+      message: formData.get('message'),
+      revealDate: formData.get('revealDate'),
+      imageUrl: '', // We'll add image support later
+    };
+
+    try {
+      const res = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        const result = await res.json();
+
+        //Show confirmation
+        alert('Message created successfully!');
+        form.reset();
+        fetchMessages(); // Refresh messages
+      } else {
+        const errorData = await res.json();
+        console.error('Server error:', errorData);
+        alert('Message creation failed: ' + (errorData.message || 'Unknown error'));
       }
-   });
+    } catch (err) {
+      console.error('Submission error:', err);
+      alert('Failed to send message. Please try again.');
+    }
+  });
 }

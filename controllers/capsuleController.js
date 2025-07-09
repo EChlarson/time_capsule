@@ -53,6 +53,7 @@ exports.createCapsule = async (req, res) => {
     await capsule.save();
     res.status(201).json({ message: 'Capsule created successfully', capsule });
   } catch (err) {
+    console.error('Capsule creation error:', err);
     res.status(500).json({ message: 'Error creating capsule', error: err.message });
   }
 };
