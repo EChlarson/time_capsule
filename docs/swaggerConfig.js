@@ -167,6 +167,9 @@ const options = {
         },
       },
     },
+    security: [
+      {OAuth2: ['profile', 'email']}
+],
   },
   apis: ['./routes/*.js', './controllers/*.js'],
 };
