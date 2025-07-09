@@ -73,28 +73,31 @@ function displayMessages(messages) {
          <h4>${revealed ? msg.title : '🔒 Locked Message'}</h4>
          <p><strong>Date:</strong> ${new Date(msg.revealDate).toLocaleDateString()}</p>
       `;
-      card.addEventListener('click', () => openPopup(msg, revealed));
+      card.addEventListener('click', () => showPopup(msg, revealed));
       grid.appendChild(card);
    });
 }
 
 // Show popup
-function showPopup(messageData) {
+function showPopup(messageData, isUnlocked) {
   const popup = document.getElementById('popup');
-  const content = document.getElementById('popup-content');
+  const content = document.querySelector('#popup .popup-content');
 
-  // Clear old content
   content.innerHTML = '';
 
-  if (messageData.locked) {
-    content.innerHTML = `<p>🔒 This message is locked until ${messageData.revealDate}</p>`;
+  if (!isUnlocked) {
+    content.innerHTML = `<p>🔒 This message is locked until ${new Date(messageData.revealDate).toLocaleDateString()}</p>`;
   } else {
     content.innerHTML = `
       <h3>${messageData.title}</h3>
       <p>${messageData.message}</p>
       ${messageData.imageUrl ? `<img src="${messageData.imageUrl}" alt="Capsule Image" style="max-width:100%;">` : ''}
+      <p><strong>Reveal Date:</strong> ${new Date(messageData.revealDate).toLocaleDateString()}</p>
     `;
   }
+
+  popup.classList.add('visible');
+}
 
   popup.classList.add('visible');
 }
