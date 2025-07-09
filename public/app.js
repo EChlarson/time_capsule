@@ -20,13 +20,12 @@ if (logoutBtn) {
 
 // On dashboard load
 if (window.location.pathname.includes('dashboard.html')) {
-   const user = JSON.parse(localStorage.getItem('user'));
-   if (!user) window.location.href = 'index.html';
-   document.getElementById('username').textContent = user.name;
 
-   getUserInfo();
+   if (window.location.pathname.includes('dashboard.html')) {
+   getUserInfo(); // ✅ This now handles login check
    fetchMessages();
    setupForm();
+   }
 }
 
 // Fetch user session info
@@ -50,12 +49,14 @@ async function getUserInfo() {
 async function fetchMessages() {
    try {
       const res = await fetch(apiUrl, {
-         headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('user')).token}` }
+         credentials: 'include', // ✅ This tells the browser to send cookies (session)
       });
+      if (!res.ok) throw new Error('Unauthorized or error fetching data');
       const data = await res.json();
       displayMessages(data);
    } catch (err) {
       console.error('Error loading messages:', err);
+      window.location.href = 'index.html'; // Optional fallback
    }
 }
 
@@ -122,8 +123,8 @@ function setupForm() {
          method: 'POST',
          headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${JSON.parse(localStorage.getItem('user')).token}`,
          },
+         credentials: 'include',
          body: JSON.stringify(payload),
          });
          if (res.ok) {
