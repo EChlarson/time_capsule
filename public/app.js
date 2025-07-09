@@ -99,9 +99,6 @@ function showPopup(messageData, isUnlocked) {
   popup.classList.add('visible');
 }
 
-  popup.classList.add('visible');
-}
-
 function closePopup() {
   document.getElementById('popup').classList.remove('visible');
 }
