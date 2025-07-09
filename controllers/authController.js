@@ -5,8 +5,8 @@ exports.login = passport.authenticate('google', {
 });
 
 exports.callback = passport.authenticate('google', {
-  failureRedirect: '/api/auth/login',
-  successRedirect: '/api/capsules', // Redirect to capsules after login
+  failureRedirect: '/login.html',
+  successRedirect: '/dashboard.html', // Redirect to capsules after login
 });
 
 exports.getUser = (req, res) => {
