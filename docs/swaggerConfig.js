@@ -16,21 +16,6 @@ const options = {
       { name: 'Capsules', description: 'Endpoints for managing time capsules' },
     ],
     paths: {
-      '/': {
-        get: {
-          tags: ['Root'],
-          summary: 'Root endpoint',
-          description: 'Returns a welcome message for the Time Capsule API.',
-          responses: {
-            200: {
-              description: 'Successful response',
-              content: {
-                'text/plain': { schema: { type: 'string', example: 'Time Capsule API' } },
-              },
-            },
-          },
-        },
-      },
       '/api/capsules': {
         get: {
           tags: ['Capsules'],

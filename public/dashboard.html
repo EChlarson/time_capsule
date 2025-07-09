@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FutureMail - Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  
+   <header class="main-header">
+      <div class="logo-container">
+         <h1>FutureMail</h1>
+         <button id="logoutBtn" class="logoutBtn">Log Out</button>
+      </div>
+
+      <div class="user-controls">
+         <span>Welcome back, <strong id="username"></strong>!</span>
+      </div>
+
+      <div class="filters">
+         <button onclick="filterMessages('all')">View All</button>
+         <button onclick="filterMessages('unlocked')">View Unlocked</button>
+         <button onclick="filterMessages('locked')">View Locked</button>
+      </div>
+   </header>
+
+   <div class="dashboard-container">
+      <section id="messageGrid" class="grid"></section>
+
+      <aside class="form-section">
+         <h3>Write a message to your future self</h3>
+         <form id="messageForm">
+            <input type="text" name="title" placeholder="Title" required />
+            <textarea name="message" placeholder="Message" required></textarea>
+            <input type="date" name="revealDate" required />
+            <input type="file" name="image" />
+            <button type="submit">Submit Message</button>
+         </form>
+      </aside>
+   </div>
+
+   <!-- Popup -->
+   <div id="popup" class="popup">
+      <div class="popup-content">
+         <button id="closePopup">×</button>
+         <h3 id="popupTitle"></h3>
+         <p id="popupMessage"></p>
+         <img id="popupImage" class="popup-img" src="" alt="Attached" style="display: none;" />
+         <p id="popupDate"></p>
+      </div>
+   </div>
+
+   <script src="app.js"></script>
+</body>
+</html>
