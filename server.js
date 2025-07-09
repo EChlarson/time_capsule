@@ -62,14 +62,13 @@ console.log('Passport initialized');
 app.use('/api/auth', authRoutes);
 app.use('/api/capsules', capsuleRoutes);
 
-app.get('/', (req, res) => {
-  res.send(`
-    <h1>Welcome to the Time Capsule API</h1>
-    <p>Explore the API documentation and test endpoints:</p>
-    <a href="/api-docs">Go to API Documentation</a>
-    <br>
-    <a href="api/auth/login">Login with Google</a>
-  `);
+// Serve static frontend files
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Force all unknown routes to return index.html
+app.get('/*any', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 console.log('Server routes configured');
