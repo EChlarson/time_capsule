@@ -26,7 +26,7 @@ const capsuleUpdateValidationRules = [
     .isISO8601()
     .withMessage('Reveal date must be a valid ISO 8601 date (e.g., 2025-12-31)')
     .toDate(),
-  body('imageUrl').optional().isURL().withMessage('Image URL must be valid'),
+  body('imageUrl').optional({ checkFalsy: true }).isURL().withMessage('Image URL must be valid'),
   body('isPrivate').optional().isBoolean().withMessage('isPrivate must be a boolean'),
 ];
 
