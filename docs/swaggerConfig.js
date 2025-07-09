@@ -137,7 +137,7 @@ const options = {
             title: { type: 'string', example: 'My Future Message' },
             message: { type: 'string', example: 'Hello future self!' },
             imageUrl: { type: 'string', example: 'https://example.com/image.jpg' },
-            revealDate: { type: 'string', format: 'date-time', example: '2025-12-31T00: maioria0:00.000Z' },
+            revealDate: { type: 'string', format: 'date-time', example: '2025-12-31T00:00:00.000Z' },
             isPrivate: { type: 'boolean', example: true },
             createdAt: { type: 'string', format: 'date-time', example: '2025-06-25T21:04:00.000Z' },
           },
