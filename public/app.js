@@ -1,14 +1,12 @@
-const apiUrl = 'https://your-api-url.com/api/capsules'; // Update with your deployed API URL
+const apiUrl = 'https://time-capsule-3kgt.onrender.com/api/capsules';
 
-// Redirect on login (mock OAuth login for now)
+// login
 const loginBtn = document.getElementById('loginBtn');
+
 if (loginBtn) {
-   loginBtn.addEventListener('click', () => {
-      // Simulate OAuth login success
-      const mockUser = { name: 'Elizabeth', token: 'demo-token' };
-      localStorage.setItem('user', JSON.stringify(mockUser));
-      window.location.href = 'dashboard.html';
-   });
+  loginBtn.addEventListener('click', () => {
+    window.location.href = '/api/auth/login';
+  });
 }
 
 // Logout
@@ -26,8 +24,26 @@ if (window.location.pathname.includes('dashboard.html')) {
    if (!user) window.location.href = 'index.html';
    document.getElementById('username').textContent = user.name;
 
+   getUserInfo();
    fetchMessages();
    setupForm();
+}
+
+// Fetch user session info
+async function getUserInfo() {
+  try {
+    const res = await fetch('/api/auth/user', { credentials: 'include' });
+    if (res.ok) {
+      const user = await res.json();
+      document.getElementById('username').textContent = user.name;
+    } else {
+      // Not logged in, redirect
+      window.location.href = '/login.html';
+    }
+  } catch (err) {
+    console.error('Error checking login:', err);
+    window.location.href = '/login.html';
+  }
 }
 
 // Fetch and display messages
