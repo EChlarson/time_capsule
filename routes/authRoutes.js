@@ -7,5 +7,6 @@ router.get('/login', authController.login);
 router.get('/callback', authController.callback);
 router.get('/user', authController.getUser);
 router.get('/logout', authController.logout);
+router.put('/update', authController.updateUsername);
 
 module.exports = router;
