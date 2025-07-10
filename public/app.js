@@ -32,13 +32,10 @@ if (window.location.pathname.includes('dashboard.html')) {
 async function getUserInfo() {
   try {
     const res = await fetch('/api/auth/user', { credentials: 'include' });
-    if (res.ok) {
-      const user = await res.json();
-      document.getElementById('username').textContent = user.name;
-    } else {
-      // Not logged in, redirect
+    if (!res.ok) {
       window.location.href = '/login.html';
     }
+    // No need to use the user data
   } catch (err) {
     console.error('Error checking login:', err);
     window.location.href = '/login.html';
