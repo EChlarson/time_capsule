@@ -5,7 +5,10 @@ const User = require('../models/user');
 const { sendUnlockEmail } = require('./email');
 
 const startEmailCron = () => {
-  // Run every hour at minute 0 (e.g., 1:00, 2:00)
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('Email cron job disabled in non-production environment');
+    return;
+  }
   cron.schedule('0 * * * *', async () => {
     try {
       console.log('Checking for unlocked capsules...');
@@ -14,7 +17,6 @@ const startEmailCron = () => {
         revealDate: { $lte: now },
         notificationSent: false,
       });
-
       for (const capsule of capsules) {
         const user = await User.findById(capsule.userId);
         if (user) {
@@ -22,8 +24,6 @@ const startEmailCron = () => {
           capsule.notificationSent = true;
           await capsule.save();
           console.log(`Notification sent for capsule ${capsule._id} to ${user.email}`);
-        } else {
-          console.log(`No user found for capsule ${capsule._id}`);
         }
       }
       console.log(`Processed ${capsules.length} unlocked capsules`);
