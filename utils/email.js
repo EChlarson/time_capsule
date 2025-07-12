@@ -10,12 +10,9 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendUnlockEmail = async (user, capsule) => {
-  const dashboardUrl = process.env.NODE_ENV === 'production'
-    ? 'https://time-capsule-3kgt.onrender.com/dashboard.html'
-    : 'http://localhost:3000/dashboard.html';
-
+  const dashboardUrl = 'https://time-capsule-3kgt.onrender.com/dashboard.html';
   const mailOptions = {
-    from: process.env.EMAIL_USER, // futuremail.unlock@gmail.com
+    from: process.env.EMAIL_USER,
     to: user.email,
     subject: 'Your FutureMail Message Is Unlocked!',
     html: `

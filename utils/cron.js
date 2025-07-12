@@ -9,7 +9,8 @@ const startEmailCron = () => {
     console.log('Email cron job disabled in non-production environment');
     return;
   }
-  cron.schedule('0 * * * *', async () => {
+  // checks every day at midnight
+  cron.schedule('0 0 * * *', async () => {
     try {
       console.log('Checking for unlocked capsules...');
       const now = new Date();
