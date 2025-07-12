@@ -155,7 +155,55 @@ const options = {
           },
         },
       },
+      '/api/auth/user': {
+        get: {
+          tags: ['Auth'],
+          summary: 'Get authenticated user profile',
+          description: 'Retrieves the profile of the currently authenticated user.',
+          responses: {
+            200: {
+              description: 'User profile',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {                
+                      email: { type: 'string' },
+                      usernname: { type: 'string' },
+                    },
+                  },
+                },
+              },
+            },
+            401: { description: 'Unauthorized if not logged in' },
+            500: { description: 'Server error' },
+        },
+      },
     },
+      '/api/auth/logout': {
+      get: {
+        tags: ['Auth'],
+        summary: 'Log out the authenticated user',
+        description: 'Destroys the user session and logs out the user.',
+        responses: {
+          200: {
+            description: 'Logged out successfully',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    message: { type: 'string', example: 'Logged out successfully' },
+                  },
+                },
+              },
+            },
+          },
+          500: { description: 'Server error' },
+        },
+      },
+    },
+  },
     components: {
       schemas: {
         Capsule: {

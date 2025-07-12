@@ -11,19 +11,22 @@ exports.callback = passport.authenticate('google', {
   successRedirect: '/dashboard.html',
 });
 
-exports.getUser = (req, res) => {
-  if (req.user) {
+exports.getUser = async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ error: 'Unauthorized: Please log in' });
+    }
     res.json({
-      name: req.user.displayName,
-      email: req.user.emails?.[0]?.value,
-      username: req.user.username, // Include username
+      email: req.user.email,
+      username: req.user.username,
     });
-  } else {
-    res.status(401).json({ message: 'Not authenticated' });
+  } catch (err) {
+    console.error('Error fetching user:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
-exports.logout = (req, res) => {
+exports.logout = (req, res, next) => {
   req.logout((err) => {
     if (err) {
       return next(err);
@@ -34,6 +37,9 @@ exports.logout = (req, res) => {
 
 exports.updateUsername = async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({ error: 'Unauthorized: Please log in' });
+    }
     const { username } = req.body;
     if (!username) {
       return res.status(400).json({ message: 'Username is required' });
