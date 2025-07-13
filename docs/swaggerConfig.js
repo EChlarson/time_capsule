@@ -125,8 +125,85 @@ const options = {
             500: { description: 'Server error' },
           },
         },
+      },      
+      // swaggerConfig.js (add to paths)
+      '/api/auth/update': {
+        put: {
+          tags: ['Auth'],
+          summary: 'Update username',
+          description: 'Updates the authenticated user’s username.',
+          security: [{ OAuth2: ['profile', 'email'] }],
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    username: { type: 'string', example: 'newUsername' },
+                  },
+                  required: ['username'],
+                },
+              },
+            },
+          },
+          responses: {
+            200: { description: 'Username updated successfully', content: { 'application/json': { schema: { type: 'object', properties: { message: { type: 'string' }, user: { type: 'object', properties: { email: { type: 'string' }, username: { type: 'string' } } } } } } } },
+            400: { description: 'Invalid or taken username' },
+            401: { description: 'Unauthorized if not logged in' },
+            500: { description: 'Server error' },
+          },
+        },
+      },
+      '/api/auth/user': {
+        get: {
+          tags: ['Auth'],
+          summary: 'Get authenticated user profile',
+          description: 'Retrieves the profile of the currently authenticated user.',
+          responses: {
+            200: {
+              description: 'User profile',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {                
+                      email: { type: 'string' },
+                      usernname: { type: 'string' },
+                    },
+                  },
+                },
+              },
+            },
+            401: { description: 'Unauthorized if not logged in' },
+            500: { description: 'Server error' },
+        },
       },
     },
+      '/api/auth/logout': {
+      get: {
+        tags: ['Auth'],
+        summary: 'Log out the authenticated user',
+        description: 'Destroys the user session and logs out the user.',
+        responses: {
+          200: {
+            description: 'Logged out successfully',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    message: { type: 'string', example: 'Logged out successfully' },
+                  },
+                },
+              },
+            },
+          },
+          500: { description: 'Server error' },
+        },
+      },
+    },
+  },
     components: {
       schemas: {
         Capsule: {

@@ -8,6 +8,7 @@ const capsuleSchema = new mongoose.Schema({
   revealDate: Date,
   isPrivate: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now },
+  notificationSent: { type: Boolean, default: false },
 });
 
 module.exports = mongoose.model('Capsule', capsuleSchema);

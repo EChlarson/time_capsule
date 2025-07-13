@@ -1,4 +1,8 @@
-const apiUrl = 'https://time-capsule-3kgt.onrender.com/api/capsules';
+// public/app.js
+const apiUrl = window.location.hostname === 'localhost' ? 'http://localhost:3000/api/capsules' : 'https://time-capsule-3kgt.onrender.com/api/capsules';
+const authUrl = window.location.hostname === 'localhost' ? 'http://localhost:3000/api/auth' : 'https://time-capsule-3kgt.onrender.com/api/auth';
+
+let capsules = [];
 
 // login
 const loginBtn = document.getElementById('loginBtn');
@@ -34,8 +38,14 @@ async function getUserInfo() {
     const res = await fetch('/api/auth/user', { credentials: 'include' });
     if (!res.ok) {
       window.location.href = '/login.html';
+      return;
     }
-    // No need to use the user data
+    const data = await res.json();
+    // Update username display
+    const usernameDisplay = document.getElementById('username-display');
+    if (usernameDisplay) {
+      usernameDisplay.textContent = data.username || 'User';
+    }
   } catch (err) {
     console.error('Error checking login:', err);
     window.location.href = '/login.html';
