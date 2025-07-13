@@ -9,6 +9,7 @@ const authRoutes = require('./routes/authRoutes');
 const capsuleRoutes = require('./routes/capsuleRoutes');
 const swaggerDocument = require('./docs/swaggerConfig');
 require('./config/db');
+const commentRoutes = require('./routes/commentRoutes');
 
 const app = express();
 
@@ -61,6 +62,7 @@ console.log('Passport initialized');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/capsules', capsuleRoutes);
+app.use('/api/comments', commentRoutes);
 
 // Serve static frontend files
 const path = require('path');

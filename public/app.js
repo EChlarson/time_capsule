@@ -108,6 +108,7 @@ function showPopup(messageData, isUnlocked) {
     imageEl.style.display = 'none';
     dateEl.textContent = `Unlocks on: ${new Date(messageData.revealDate).toLocaleDateString()}`;
   } else {
+    loadComments(messageData._id);
     titleEl.textContent = messageData.title;
     messageEl.textContent = messageData.message;
     dateEl.textContent = `Revealed on: ${new Date(messageData.revealDate).toLocaleDateString()}`;
@@ -128,6 +129,63 @@ function closePopup() {
 }
 
 document.getElementById('closePopup').addEventListener('click', closePopup);
+
+//Comments
+document.addEventListener('DOMContentLoaded', () => {
+  const commentForm = document.getElementById('commentForm');
+  const commentInput = document.getElementById('commentInput');
+  const commentList = document.getElementById('commentList');
+
+  if (commentForm) {
+    commentForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!currentMessageId) return;
+
+      const message = commentInput.value.trim();
+      if (!message) return;
+
+      try {
+        const res = await fetch(`/api/comments/${currentMessageId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({ message }),
+        });
+
+        if (!res.ok) throw new Error('Comment submission failed');
+        commentInput.value = '';
+        await loadComments(currentMessageId);
+      } catch (err) {
+        console.error(err);
+        alert('Failed to post comment.');
+      }
+    });
+  }
+
+  async function loadComments(capsuleId) {
+    try {
+      const res = await fetch(`/api/comments/${capsuleId}`, {
+        credentials: 'include',
+      });
+      const comments = await res.json();
+
+      commentList.innerHTML = '';
+      comments.forEach(comment => {
+        const li = document.createElement('li');
+        const date = new Date(comment.createdAt).toLocaleString();
+        li.textContent = `${date}: ${comment.message}`;
+        commentList.appendChild(li);
+      });
+    } catch (err) {
+      console.error('Error loading comments:', err);
+    }
+  }
+
+  // Load comments when popup opens
+  window.loadComments = loadComments;
+});
 
 // Edit & Delete button logic
 document.addEventListener('DOMContentLoaded', () => {
