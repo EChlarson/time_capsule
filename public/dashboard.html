@@ -19,9 +19,9 @@
     </div>
 
       <div class="filters">
-         <button onclick="filterMessages('all')">View All</button>
-         <button onclick="filterMessages('unlocked')">View Unlocked</button>
-         <button onclick="filterMessages('locked')">View Locked</button>
+         <button id="btn-all" onclick="filterMessages('all')">View All</button>
+         <button id="btn-unlocked" onclick="filterMessages('unlocked')">View Unlocked</button>
+         <button id="btn-locked" onclick="filterMessages('locked')">View Locked</button>
       </div>
    </header>
 
@@ -40,7 +40,7 @@
       </aside>
    </div>
 
-   <!-- Popup -->
+   <!-- Hidden Popup -->
    <div id="popup" class="popup">
       <div class="popup-content">
          <button id="closePopup">×</button>
@@ -48,6 +48,23 @@
          <p id="popupMessage"></p>
          <img id="popupImage" class="popup-img" src="" alt="Attached" style="display: none;" />
          <p id="popupDate"></p>
+
+         <button id="editMessageBtn">Edit</button>
+         <button id="deleteMessageBtn">Delete</button>
+      </div>
+   </div>
+
+   <!-- Hidden Edit Form -->
+   <div id="editPopup" class="popup">
+      <div class="popup-content">
+         <button id="closeEditPopup">×</button>
+         <h3>Edit Message</h3>
+         <form id="editForm">
+            <input type="text" id="editTitle" name="title" placeholder="Title" required />
+            <textarea id="editMessage" name="message" placeholder="Message" required></textarea>
+            <input type="date" id="editRevealDate" name="revealDate" required />
+            <button type="submit">Update</button>
+         </form>
       </div>
    </div>
 
