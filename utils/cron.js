@@ -10,7 +10,7 @@ const startEmailCron = () => {
     return;
   }
   // checks every day at midnight
-  cron.schedule('0 0 * * *', async () => {
+    cron.schedule('*/10 * * * *', async () => {
     try {
       console.log('Checking for unlocked capsules...');
       const now = new Date();
