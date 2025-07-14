@@ -6,15 +6,6 @@ const authUrl = window.location.hostname === 'localhost' ? 'http://localhost:300
 
 let capsules = [];
 
-// login
-const loginBtn = document.getElementById('loginBtn');
-
-if (loginBtn) {
-  loginBtn.addEventListener('click', () => {
-    window.location.href = '/api/auth/login';
-  });
-}
-
 // Logout
 const logoutBtn = document.getElementById('logoutBtn');
 if (logoutBtn) {
@@ -88,7 +79,7 @@ function displayMessages(messages) {
 }
 
 // Show popup
-function showPopup(messageData, isUnlocked) {
+async function showPopup(messageData, isUnlocked) {
   console.log('showPopup called with:', messageData);
   if (!messageData._id) {
     console.warn('No _id found in messageData!');
@@ -113,6 +104,21 @@ function showPopup(messageData, isUnlocked) {
     messageEl.textContent = messageData.message;
     dateEl.textContent = `Revealed on: ${new Date(messageData.revealDate).toLocaleDateString()}`;
 
+    // Load image from media DB
+    try {
+      const mediaRes = await fetch(`/api/media/${messageData._id}`, { credentials: 'include' });
+      if (messageData.imageUrl) {
+        imageEl.src = messageData.imageUrl;
+        imageEl.classList.add('visible');    // show the image
+      } else {
+        imageEl.src = '';                    // clear src if no image
+        imageEl.classList.remove('visible'); // hide the image
+      }
+    } catch (err) {
+      console.error('Error loading image:', err);
+      imageEl.style.display = 'none';
+    }
+
     if (messageData.imageUrl) {
       imageEl.src = messageData.imageUrl;
       imageEl.style.display = 'block';
@@ -128,7 +134,16 @@ function closePopup() {
   document.getElementById('popup').classList.remove('visible');
 }
 
-document.getElementById('closePopup').addEventListener('click', closePopup);
+document.addEventListener('DOMContentLoaded', () => {
+  const closeBtn = document.getElementById('closePopup');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closePopup);
+  } else {
+    console.warn('#closePopup not found');
+  }
+
+  setupForm();
+});
 
 //Comments
 document.addEventListener('DOMContentLoaded', () => {
@@ -290,10 +305,11 @@ function setupForm() {
       title: formData.get('title'),
       message: formData.get('message'),
       revealDate: formData.get('revealDate'),
-      imageUrl: '', // We'll add image support later
+      imageUrl: '', // remove or keep if legacy
     };
 
     try {
+      // 1. Create the capsule
       const res = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -303,18 +319,39 @@ function setupForm() {
         body: JSON.stringify(payload),
       });
 
-      if (res.ok) {
-        const result = await res.json();
-
-        //Show confirmation
-        alert('Message created successfully!');
-        form.reset();
-        fetchMessages(); // Refresh messages
-      } else {
+      if (!res.ok) {
         const errorData = await res.json();
-        console.error('Server error:', errorData);
-        alert('Message creation failed: ' + (errorData.message || 'Unknown error'));
+        throw new Error(errorData.message || 'Failed to create capsule');
       }
+
+      const result = await res.json();
+      const capsuleId = result.capsule._id;
+      console.log('Capsule created with ID:', capsuleId);
+
+      // 2. Upload image if present
+      const imageFile = formData.get('image');
+      if (imageFile && imageFile.size > 0) {
+        const imageForm = new FormData();
+        imageForm.append('image', imageFile);
+
+        const imageRes = await fetch(`/api/media/${capsuleId}`, {
+          method: 'POST',
+          body: imageForm,
+          credentials: 'include',
+        });
+
+        if (!imageRes.ok) {
+          const imageError = await imageRes.json();
+          console.warn('Image upload failed:', imageError.message || imageError);
+        } else {
+          console.log('Image uploaded successfully');
+        }
+      }
+
+      alert('Message created successfully!');
+      form.reset();
+      fetchMessages();  // refresh your list
+
     } catch (err) {
       console.error('Submission error:', err);
       alert('Failed to send message. Please try again.');

@@ -45,7 +45,6 @@ exports.createCapsule = async (req, res) => {
       userId: req.user._id,
       title: req.body.title,
       message: req.body.message,
-      imageUrl: req.body.imageUrl,
       revealDate: req.body.revealDate,
       isPrivate: req.body.isPrivate !== undefined ? req.body.isPrivate : true,
     });
@@ -83,7 +82,6 @@ exports.updateCapsule = async (req, res) => {
     const updates = {};
     if (req.body.title) updates.title = req.body.title;
     if (req.body.message) updates.message = req.body.message;
-    if (req.body.imageUrl) updates.imageUrl = req.body.imageUrl;
     if (req.body.revealDate) updates.revealDate = req.body.revealDate;
     if (req.body.isPrivate !== undefined) updates.isPrivate = req.body.isPrivate;
 

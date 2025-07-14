@@ -173,11 +173,12 @@ form input[type="file"] {
   color: #888;
 }
 
-.popup-img {
-  max-width: 100%;
-  margin-top: 1rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+#popupImage {
+  display: none;  /* hidden by default */
+}
+
+#popupImage.visible {
+  display: block; /* show when this class is added */
 }
 
 /* === Comments === */
