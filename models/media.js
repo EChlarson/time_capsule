@@ -6,7 +6,7 @@ const mediaSchema = new mongoose.Schema({
     required: true,
     ref: 'Capsule',
   },
-  mediaData: {
+  imageData: {
     type: Buffer,
     required: true,
   },

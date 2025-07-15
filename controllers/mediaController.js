@@ -39,7 +39,7 @@ exports.getMedia = async (req, res) => {
     console.log(media.contentType);
 
     res.set('Content-Type', media.contentType);
-    res.send(media.mediaData);
+    res.send(media.imageData);
   } catch (err) {
     console.error('Fetch error:', err);
     res.status(500).json({ message: 'Fetch failed', error: err.message });

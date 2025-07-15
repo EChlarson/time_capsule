@@ -156,9 +156,12 @@ form input[type="file"] {
   background: white;
   padding: 2rem;
   border-radius: 10px;
-  max-width: 500px;
+  max-width: 90vw;        /* Constrain width on small screens */
+  max-height: 80vh;       /* Prevent from going off screen vertically */
+  overflow-y: auto;       /* Add scroll bar if needed */
   text-align: left;
   position: relative;
+  box-sizing: border-box;
 }
 
 .popup-content button#closePopup,
