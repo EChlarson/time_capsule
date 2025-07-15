@@ -1,37 +1,47 @@
 const Media = require('../models/media');
-const multer = require('multer');
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const mongoose = require('mongoose');
 
-// Upload media to a capsule
 exports.uploadMedia = async (req, res) => {
   try {
-    if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
+    const capsuleId = req.params.capsuleId;
+
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
 
     const newMedia = new Media({
-      capsuleId: req.params.capsuleId,
-      imageData: req.file.buffer,
+      capsuleId: new mongoose.Types.ObjectId(capsuleId),
+      mediaData: req.file.buffer,
       contentType: req.file.mimetype,
     });
 
     await newMedia.save();
     res.status(201).json({ message: 'Media uploaded', mediaId: newMedia._id });
   } catch (err) {
-    console.error('Error uploading media:', err);
+    console.error('Upload error:', err);
     res.status(500).json({ message: 'Upload failed', error: err.message });
   }
 };
 
-// Retrieve media for a capsule
 exports.getMedia = async (req, res) => {
   try {
-    const media = await Media.findOne({ capsuleId: req.params.capsuleId });
-    if (!media) return res.status(404).json({ message: 'No media found' });
+    const capsuleId = req.params.capsuleId;
+
+    const media = await Media.findOne({
+      capsuleId: new mongoose.Types.ObjectId(capsuleId),
+    });
+
+    if (!media) {
+      console.log('No media found for capsuleId:', capsuleId);
+      return res.status(404).json({ message: 'No media found' });
+    }
+
+    console.log(media.contentType);
 
     res.set('Content-Type', media.contentType);
     res.send(media.mediaData);
   } catch (err) {
-    console.error('Error fetching media:', err);
-    res.status(500).json({ message: 'Fetch failed' });
+    console.error('Fetch error:', err);
+    res.status(500).json({ message: 'Fetch failed', error: err.message });
   }
 };

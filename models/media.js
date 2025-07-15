@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
-const imageSchema = new mongoose.Schema({
+const mediaSchema = new mongoose.Schema({
   capsuleId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Capsule',
     required: true,
+    ref: 'Capsule',
   },
-  imageData: {
+  mediaData: {
     type: Buffer,
     required: true,
   },
@@ -14,10 +14,6 @@ const imageSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  uploadedAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+}, { timestamps: true });
 
-module.exports = mongoose.model('Media', imageSchema);
+module.exports = mongoose.model('Media', mediaSchema);

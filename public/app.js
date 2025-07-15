@@ -81,17 +81,25 @@ function displayMessages(messages) {
 // Show popup
 async function showPopup(messageData, isUnlocked) {
   console.log('showPopup called with:', messageData);
+
   if (!messageData._id) {
     console.warn('No _id found in messageData!');
+    return;
   }
-  
+
   currentMessageId = messageData._id;
   currentCapsule = messageData;
+
   const popup = document.getElementById('popup');
   const titleEl = document.getElementById('popupTitle');
   const messageEl = document.getElementById('popupMessage');
   const imageEl = document.getElementById('popupImage');
   const dateEl = document.getElementById('popupDate');
+
+  if (!popup || !titleEl || !messageEl || !imageEl || !dateEl) {
+    console.error('Popup elements missing in DOM');
+    return;
+  }
 
   if (!isUnlocked) {
     titleEl.textContent = '🔒 Locked Message';
@@ -99,31 +107,34 @@ async function showPopup(messageData, isUnlocked) {
     imageEl.style.display = 'none';
     dateEl.textContent = `Unlocks on: ${new Date(messageData.revealDate).toLocaleDateString()}`;
   } else {
-    loadComments(messageData._id);
+    // Show title, message, date
     titleEl.textContent = messageData.title;
     messageEl.textContent = messageData.message;
     dateEl.textContent = `Revealed on: ${new Date(messageData.revealDate).toLocaleDateString()}`;
 
-    // Load image from media DB
+    // Load comments
+    loadComments(messageData._id);
+
+    // Try to fetch media (image)
     try {
-      const mediaRes = await fetch(`/api/media/${messageData._id}`, { credentials: 'include' });
-      if (messageData.imageUrl) {
-        imageEl.src = messageData.imageUrl;
-        imageEl.classList.add('visible');    // show the image
+      const mediaRes = await fetch(`/api/media/${messageData._id}`, {
+        credentials: 'include',
+      });
+
+      if (mediaRes.ok) {
+        const blob = await mediaRes.blob();
+        const url = URL.createObjectURL(blob);
+        imageEl.src = url;
+        imageEl.style.display = 'block';
       } else {
-        imageEl.src = '';                    // clear src if no image
-        imageEl.classList.remove('visible'); // hide the image
+        console.warn('Media not found for capsule:', messageData._id);
+        imageEl.style.display = 'none';
+        imageEl.src = '';
       }
     } catch (err) {
       console.error('Error loading image:', err);
       imageEl.style.display = 'none';
-    }
-
-    if (messageData.imageUrl) {
-      imageEl.src = messageData.imageUrl;
-      imageEl.style.display = 'block';
-    } else {
-      imageEl.style.display = 'none';
+      imageEl.src = '';
     }
   }
 
@@ -141,8 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     console.warn('#closePopup not found');
   }
-
-  setupForm();
 });
 
 //Comments
@@ -276,6 +285,37 @@ document.addEventListener('DOMContentLoaded', () => {
       alert('Error updating message.');
     }
   });
+
+    deleteBtn.addEventListener('click', async () => {
+      if (!currentCapsule || !currentCapsule._id) {
+        alert('No message selected.');
+        return;
+      }
+
+      const confirmDelete = confirm('Are you sure you want to delete this message?');
+      if (!confirmDelete) return;
+
+      try {
+        const response = await fetch(`/api/capsules/${currentCapsule._id}`, {
+          method: 'DELETE',
+          credentials: 'include',
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          console.error('Delete failed:', error);
+          alert('Failed to delete the message.');
+          return;
+        }
+
+        alert('Message deleted successfully!');
+        document.getElementById('popup').classList.remove('visible');
+        fetchMessages(); // Refresh the list after deletion
+      } catch (err) {
+        console.error('Delete error:', err);
+        alert('Error deleting message.');
+      }
+    });
 });
 
 //Edit Form
