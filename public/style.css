@@ -65,7 +65,9 @@ button:hover {
   margin-top: 1rem;
 }
 
-.filters button.active {
+.filters button.active,
+#viewPublicCapsulesBtn.active,
+#viewMyCapsulesBtn.active {
   background-color: #007BFF;
   color: white;
   border: 1px solid #0056b3;
@@ -195,4 +197,9 @@ form input[type="file"] {
 #commentList {
   list-style: none;
   padding-left: 0;
+}
+
+/* === Private / Public === */
+#privateCheckbox {
+  margin-bottom: 1rem;
 }

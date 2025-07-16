@@ -11,7 +11,11 @@
    <header class="main-header">
       <div class="logo-container">
          <h1>FutureMail</h1>
-         <button id="logoutBtn" class="logoutBtn">Log Out</button>
+         <div class="view-toggle">
+            <button id="viewMyCapsulesBtn">My Messages</button>
+            <button id="viewPublicCapsulesBtn">Public Messages</button>
+            <button id="logoutBtn" class="logoutBtn">Log Out</button>
+         </div>
       </div>
 
       <div class="user-controls">
@@ -35,6 +39,9 @@
             <textarea name="message" placeholder="Message" required></textarea>
             <input type="date" name="revealDate" required />
             <input type="file" name="image" />
+            <label>
+               <input type="checkbox" id="privateCheckbox" /> Make this message private
+            </label> <br>
             <button type="submit">Submit Message</button>
          </form>
       </aside>

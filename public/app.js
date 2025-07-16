@@ -21,7 +21,7 @@ if (window.location.pathname.includes('dashboard.html')) {
    fetchMessages();
    setupForm();
    }
-}
+} 
 
 // Fetch user session info
 async function getUserInfo() {
@@ -67,10 +67,15 @@ function displayMessages(messages) {
       const revealed = new Date(msg.revealDate) <= now;
       const card = document.createElement('div');
       card.className = `message-card ${revealed ? 'unlocked' : 'locked'}`;
+
+      const username = msg.userId?.username || 'Unknown';
+
       card.innerHTML = `
          <h4>${revealed ? msg.title : '🔒 Locked Message'}</h4>
          <p><strong>Date:</strong> ${new Date(msg.revealDate).toLocaleDateString()}</p>
+         <p><strong>By:</strong> ${username}</p>
       `;
+
       card.addEventListener('click', () => showPopup(msg, revealed));
       grid.appendChild(card);
    });
@@ -352,11 +357,16 @@ function setupForm() {
     e.preventDefault();
 
     const formData = new FormData(form);
+
+    // ✅ Get checkbox state (defaults to false if not checked)
+    const isPrivate = document.getElementById('privateCheckbox')?.checked || false;
+
     const payload = {
       title: formData.get('title'),
       message: formData.get('message'),
       revealDate: formData.get('revealDate'),
-      imageUrl: '', // remove or keep if legacy
+      isPrivate, // ✅ Include privacy setting
+      imageUrl: '', // keep or remove if legacy
     };
 
     try {
@@ -401,7 +411,7 @@ function setupForm() {
 
       alert('Message created successfully!');
       form.reset();
-      fetchMessages();  // refresh your list
+      fetchMessages(); // refresh your list
 
     } catch (err) {
       console.error('Submission error:', err);
@@ -434,5 +444,38 @@ function filterMessages(type) {
   const activeButton = document.getElementById('btn-' + type);
   if (activeButton) {
     activeButton.classList.add('active');
+  }
+}
+
+// Public Toggle 
+document.getElementById('viewMyCapsulesBtn')?.addEventListener('click', () => {
+  fetchMessages(); 
+  setActiveViewButton('viewMyCapsulesBtn'); 
+});
+
+document.getElementById('viewPublicCapsulesBtn')?.addEventListener('click', async () => {
+  try {
+    const res = await fetch('/api/capsules/public/all', {
+      credentials: 'include',
+    });
+
+    if (!res.ok) throw new Error('Failed to fetch public capsules');
+
+    const capsules = await res.json();
+    displayMessages(capsules, true);
+    setActiveViewButton('viewPublicCapsulesBtn');
+  } catch (err) {
+    console.error('Error loading public messages:', err);
+    alert('Could not load public messages.');
+  }
+});
+
+function setActiveViewButton(activeId) {
+  const viewButtons = document.querySelectorAll('.view-toggle button');
+  viewButtons.forEach(btn => btn.classList.remove('active'));
+
+  const activeBtn = document.getElementById(activeId);
+  if (activeBtn) {
+    activeBtn.classList.add('active');
   }
 }

@@ -3,7 +3,7 @@ const { body } = require('express-validator');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const validate = require('../middleware/validate');
-const { getAllCapsules, getCapsuleById, createCapsule } = require('../controllers/capsuleController');
+const { getAllCapsules, getCapsuleById, createCapsule,getPublicCapsules} = require('../controllers/capsuleController');
 
 // Validation rules for creating a capsule
 const capsuleValidationRules = [
@@ -36,5 +36,6 @@ router.get('/:id', auth, getCapsuleById); // Get capsule by ID
 router.post('/', auth, capsuleValidationRules, validate, createCapsule); // Create a new capsule
 router.put('/:id', auth, capsuleUpdateValidationRules, validate, require('../controllers/capsuleController').updateCapsule); // Update a capsule
 router.delete('/:id', auth, require('../controllers/capsuleController').deleteCapsule); // Delete a capsule
+router.get('/public/all', getPublicCapsules);
 
 module.exports = router;

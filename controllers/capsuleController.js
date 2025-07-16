@@ -30,6 +30,19 @@ exports.getCapsuleById = async (req, res) => {
   }
 };
 
+// Get all PUBLIC Capsules (for everyone)
+exports.getPublicCapsules = async (req, res) => {
+  try {
+    const capsules = await Capsule.find({ isPrivate: false })
+      .sort({ revealDate: -1 })
+      .populate('userId', 'username');
+
+    res.json(capsules);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching public capsules', error: err.message });
+  }
+};
+
 // Create a New Capsule for Logged-in User
 exports.createCapsule = async (req, res) => {
   try {
