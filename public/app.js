@@ -4,15 +4,6 @@ const authUrl = window.location.hostname === 'localhost' ? 'http://localhost:300
 
 let capsules = [];
 
-// Logout
-const logoutBtn = document.getElementById('logoutBtn');
-if (logoutBtn) {
-   logoutBtn.addEventListener('click', () => {
-      localStorage.removeItem('user');
-      window.location.href = 'index.html';
-   });
-}
-
 // On dashboard load
 if (window.location.pathname.includes('dashboard.html')) {
 
@@ -478,4 +469,12 @@ function setActiveViewButton(activeId) {
   if (activeBtn) {
     activeBtn.classList.add('active');
   }
+}
+
+// Settings
+const settingsBtn = document.getElementById('settingsBtn');
+if (settingsBtn) {
+  settingsBtn.addEventListener('click', () => {
+    window.location.href = '/settings.html';
+  });
 }

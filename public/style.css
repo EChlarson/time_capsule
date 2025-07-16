@@ -203,3 +203,8 @@ form input[type="file"] {
 #privateCheckbox {
   margin-bottom: 1rem;
 }
+
+/* === Settings Page ===*/
+.settings-page {
+  margin: 0 3rem;
+}
