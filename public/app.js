@@ -97,8 +97,9 @@ async function showPopup(messageData, isUnlocked) {
   const messageEl = document.getElementById('popupMessage');
   const imageEl = document.getElementById('popupImage');
   const dateEl = document.getElementById('popupDate');
+  const editBtn = document.getElementById('editMessageBtn');
 
-  if (!popup || !titleEl || !messageEl || !imageEl || !dateEl) {
+  if (!popup || !titleEl || !messageEl || !imageEl || !dateEl || !editBtn) {
     console.error('Popup elements missing in DOM');
     return;
   }
@@ -108,11 +109,13 @@ async function showPopup(messageData, isUnlocked) {
     messageEl.textContent = '';
     imageEl.style.display = 'none';
     dateEl.textContent = `Unlocks on: ${new Date(messageData.revealDate).toLocaleDateString()}`;
+    editBtn.style.display = 'none';
   } else {
     // Show title, message, date
     titleEl.textContent = messageData.title;
     messageEl.textContent = messageData.message;
     dateEl.textContent = `Revealed on: ${new Date(messageData.revealDate).toLocaleDateString()}`;
+    editBtn.style.display = 'inline-block';
 
     // Load comments
     loadComments(messageData._id);
