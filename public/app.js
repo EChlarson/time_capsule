@@ -1,5 +1,3 @@
-let currentMessageId = null;
-
 // public/app.js
 const apiUrl = window.location.hostname === 'localhost' ? 'http://localhost:3000/api/capsules' : 'https://time-capsule-3kgt.onrender.com/api/capsules';
 const authUrl = window.location.hostname === 'localhost' ? 'http://localhost:3000/api/auth' : 'https://time-capsule-3kgt.onrender.com/api/auth';
@@ -79,8 +77,12 @@ function displayMessages(messages) {
 }
 
 // Show popup
+let currentMessageId = null;
+let currentCapsule = null;
+
 async function showPopup(messageData, isUnlocked) {
   console.log('showPopup called with:', messageData);
+  console.log('[Popup] Opening popup for capsule ID:', messageData._id);
 
   if (!messageData._id) {
     console.warn('No _id found in messageData!');
@@ -114,6 +116,7 @@ async function showPopup(messageData, isUnlocked) {
 
     // Load comments
     loadComments(messageData._id);
+    console.log('[Popup] Triggered loadComments for:', messageData._id);
 
     // Try to fetch media (image)
     try {
@@ -168,6 +171,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const message = commentInput.value.trim();
       if (!message) return;
 
+      console.log('[Comment Submit] Submitting comment for capsule ID:', currentMessageId);
+
       try {
         const res = await fetch(`/api/comments/${currentMessageId}`, {
           method: 'POST',
@@ -189,10 +194,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function loadComments(capsuleId) {
+    console.log('[Load Comments] Fetching comments for capsule ID:', capsuleId);
+
     try {
       const res = await fetch(`/api/comments/${capsuleId}`, {
         credentials: 'include',
       });
+
       const comments = await res.json();
 
       commentList.innerHTML = '';

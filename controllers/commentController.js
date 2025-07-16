@@ -1,4 +1,5 @@
 const Comment = require('../models/comment');
+const mongoose = require('mongoose');
 
 // Add a comment
 exports.addComment = async (req, res) => {
@@ -29,7 +30,8 @@ exports.addComment = async (req, res) => {
 // Get comments for a capsule
 exports.getCommentsByCapsule = async (req, res) => {
   try {
-    const comments = await Comment.find({ capsuleId: req.params.capsuleId }).sort({ createdAt: -1 });
+    const capsuleObjectId = new mongoose.Types.ObjectId(req.params.capsuleId);
+    const comments = await Comment.find({ capsuleId: capsuleObjectId }).sort({ createdAt: -1 });
     res.json(comments);
   } catch (err) {
     res.status(500).json({ message: 'Error fetching comments', error: err.message });
