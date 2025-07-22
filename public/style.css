@@ -208,3 +208,22 @@ form input[type="file"] {
 .settings-page {
   margin: 0 3rem;
 }
+
+/* footer */
+.main-footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #f8f8f8;
+  border-top: 1px solid #ddd;
+  margin-top: 2rem;
+}
+.main-footer p {
+  margin: 0.5rem 0;
+}
+.main-footer a {
+  color: #007bff;
+  text-decoration: none;
+}
+.main-footer a:hover {
+  text-decoration: underline;
+}
