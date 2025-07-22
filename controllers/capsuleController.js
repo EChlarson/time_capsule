@@ -4,7 +4,7 @@ const Capsule = require('../models/capsule');
 // Get all Capsules for Logged-in User
 exports.getAllCapsules = async (req, res) => {
   try {
-    const capsules = await Capsule.find({ userId: req.user._id });
+    const capsules = await Capsule.find({ userId: req.user._id }).populate('userId', 'username');
     res.json(capsules);
   } catch (err) {
     res.status(500).json({ message: 'Error Retrieving Capsules' });

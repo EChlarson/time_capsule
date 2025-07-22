@@ -6,8 +6,7 @@ async function testEmail() {
   try {
     await sendUnlockEmail(
 
-      // Replace with a valid user email for testing
-      
+      // Replace with a valid user email for testing      
       { email: 'enter email here', username: 'testuser' },
       { title: 'Test Capsule', revealDate: new Date() }
     );
