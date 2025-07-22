@@ -348,7 +348,17 @@ function setupForm() {
     e.preventDefault();
 
     const formData = new FormData(form);
-
+    const revealDate = new Date(formData.get('revealDate'));
+    // Convert to 3:00 AM EST (UTC-5)
+    const utcRevealDate = new Date(
+      Date.UTC(
+        revealDate.getFullYear(),
+        revealDate.getMonth(),
+        revealDate.getDate(),
+        8 // 3:00 AM EST = 8:00 AM UTC
+      )
+    );
+    
     // ✅ Get checkbox state (defaults to false if not checked)
     const isPrivate = document.getElementById('privateCheckbox')?.checked || false;
 
